@@ -15,6 +15,8 @@ class AlphaVantageKeys extends Migration
     {
         Schema::create('alpha_vantage_keys', function (Blueprint $table) {
             $table->string('api_key');
+
+            $table->primary('api_key');
         });
     }
 
