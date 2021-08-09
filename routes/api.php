@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AlphaVantageController;
+use App\Http\Controllers\StocksUsersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,7 +28,8 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
         return $request->user();
     });
 
-    //Route::get('/users/{user}/stocks/{stock}')
+    // Buy Stock
+    Route::post('/users/{user}/stocks/{stock}/buy', [StocksUsersController::class, 'buy']);
 
 
     // Alpha Vantage

@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Models\Stock;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -47,12 +46,6 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware('web')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/web.php'));
-        });
-
-
-        // Model Bindings
-        Route::bind('stock', function ($value) {
-            return Stock::where('name', $value)->firstOrFail();
         });
     }
 
