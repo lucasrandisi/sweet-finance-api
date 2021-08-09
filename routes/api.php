@@ -27,7 +27,10 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
         return $request->user();
     });
 
+    //Route::get('/users/{user}/stocks/{stock}')
 
+
+    // Alpha Vantage
     Route::get('/alpha-vantage', AlphaVantageController::class);
 });
 
