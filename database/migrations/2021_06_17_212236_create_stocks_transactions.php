@@ -13,17 +13,17 @@ class CreateStocksTransactions extends Migration
      */
     public function up()
     {
-        Schema::create('stocks_transactions', function (Blueprint $table) {
+        Schema::create('stock_transactions', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('stock_id');
+            $table->string('stock_symbol');
             $table->integer('amount');
-            $table->integer('sell_price');
+            $table->enum('action', ['BUY', 'SELL']);
+            $table->float('price');
             $table->timestampsTz();
 
-
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('stock_id')->references('id')->on('stocks');
+            $table->foreign('stock_symbol')->references('symbol')->on('stocks');
         });
     }
 
