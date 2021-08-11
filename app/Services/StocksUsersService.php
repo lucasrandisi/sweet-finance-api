@@ -6,18 +6,21 @@ namespace App\Services;
 
 use App\Exceptions\UnprocessableEntityException;
 use App\Models\Stock;
-use App\Models\StocksUsers;
+use App\Models\StockUser;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class StocksUsersService
 {
     protected AlphaVantageService $alphaVantageService;
+    protected StockTransactionsService  $stockTransactionsService;
 
     public function __construct(
-        AlphaVantageService $alphaVantageService
+        AlphaVantageService $alphaVantageService,
+        StockTransactionsService $stockTransactionsService
     ) {
         $this->alphaVantageService = $alphaVantageService;
+        $this->stockTransactionsService = $stockTransactionsService;
     }
 
     public function buy(Stock $stock, int $amount) {
@@ -32,8 +35,8 @@ class StocksUsersService
             throw new UnprocessableEntityException('Finance insuficiente para realizar la operación', 100);
         }
 
-
-        $stockUser = StocksUsers::firstOrNew([
+        /* Update User's Stocks */
+        $stockUser = StockUser::firstOrNew([
             'user_id' => $currentUser->id,
             'stock_symbol' => $stock->symbol,
         ]);
@@ -42,7 +45,15 @@ class StocksUsersService
 
         $stockUser->save();
 
-        return $stockUser;
+        /* Save Stock Transaction */
+        $stockTransaction = $this->stockTransactionsService->registerBuyTransaction(
+            $currentUser,
+            $stock,
+            $stockPrice,
+            $amount
+        );
+
+        return [$stockUser, $stockTransaction];
     }
 
 
