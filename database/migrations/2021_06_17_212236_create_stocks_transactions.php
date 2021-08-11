@@ -21,7 +21,7 @@ class CreateStocksTransactions extends Migration
             $table->integer('sell_price');
             $table->timestampsTz();
 
-
+            $table->unique(['user_id', 'stock_symbol']);
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('stock_symbol')->references('symbol')->on('stocks');
         });
