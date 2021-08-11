@@ -2,12 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BuyStockRequest;
 use App\Models\Stock;
-use App\Models\User;
+use App\Services\StocksUsersService;
 
 class StocksUsersController extends Controller
 {
-    public function buy(User $user, Stock $stock) {
-        return $stock;
+    protected StocksUsersService $stocksUsersService;
+
+    public function __construct(
+        StocksUsersService $stocksUsersService
+    ) {
+        $this->stocksUsersService = $stocksUsersService;
+    }
+
+    public function buy(Stock $stock, BuyStockRequest $request) {
+        $result = $this->stocksUsersService->buy($stock, $request->amount);
+
+        return response()->json($result);
     }
 }
