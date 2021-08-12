@@ -42,8 +42,12 @@ class StocksUsersService
         ]);
 
         $stockUser->amount += $amount;
-
         $stockUser->save();
+
+        /* Discount from User's Finance */
+        $currentUser->finance -= $totalPrice;
+        $currentUser->save();
+
 
         /* Save Stock Transaction */
         $stockTransaction = $this->stockTransactionsService->registerBuyTransaction(

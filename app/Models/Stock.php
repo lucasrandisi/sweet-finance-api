@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Exceptions\NotFoundException;
 use App\Services\AlphaVantageService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -28,6 +29,10 @@ class Stock extends Model
             $alphaVantageService = new AlphaVantageService();
 
             $response = $alphaVantageService->query($parameters);
+
+            if (!$response) {
+                throw new NotFoundException('Symbol not found', 101);
+            }
 
             $stock = Stock::create([
                 'symbol' => $response['Symbol'],
