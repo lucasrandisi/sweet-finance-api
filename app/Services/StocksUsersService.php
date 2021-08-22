@@ -57,7 +57,7 @@ class StocksUsersService
             $amount
         );
 
-        return [$stockUser, $stockTransaction];
+        return $stockUser;
     }
 
 
