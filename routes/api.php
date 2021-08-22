@@ -31,7 +31,9 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     // Stocks
     Route::prefix('/stocks/{stock}')->group(function() {
         Route::post('buy', [StocksUsersController::class, 'buy']);
-    });
+		Route::post('sell', [StocksUsersController::class, 'sell']);
+
+	});
 
 
     // Alpha Vantage
