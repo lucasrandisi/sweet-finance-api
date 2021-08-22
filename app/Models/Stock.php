@@ -11,6 +11,10 @@ class Stock extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = 'symbol';
+	protected $keyType = 'string';
+	public $incrementing = false;
+
     public $timestamps = false;
 
     protected $fillable = [
