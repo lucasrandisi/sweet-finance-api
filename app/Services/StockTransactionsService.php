@@ -19,4 +19,14 @@ class StockTransactionsService
             'amount' => $amount
         ]);
     }
+
+	public function registerSellTransaction(User $user, Stock $stock, float $price, int $amount) {
+		return StockTransaction::create([
+			'user_id' => $user->id,
+			'stock_symbol' => $stock->symbol,
+			'action' => 'SELL',
+			'price' => $price,
+			'amount' => $amount
+		]);
+	}
 }

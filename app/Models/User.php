@@ -29,6 +29,6 @@ class User extends Authenticatable
 
 	public function stocks()
 	{
-		return $this->belongsToMany(Stock::class, 'user_id', 'stocks_symbol');
+		return $this->belongsToMany(Stock::class, 'stocks_users')->withPivot('amount');
 	}
 }

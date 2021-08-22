@@ -21,4 +21,10 @@ class StocksUsersController extends Controller
 
         return response()->json($result);
     }
+
+    public function sell(Stock $stock, BuyStockRequest $request) {
+    	$result = $this->stocksUsersService->sell($stock, $request->amount);
+
+    	return response()->json($result);
+	}
 }

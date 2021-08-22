@@ -40,9 +40,9 @@ class StocksUsersService
             'user_id' => $currentUser->id,
             'stock_symbol' => $stock->symbol,
         ]);
-
         $stockUser->amount += $amount;
         $stockUser->save();
+
 
         /* Discount from User's Finance */
         $currentUser->finance -= $totalPrice;
@@ -50,7 +50,7 @@ class StocksUsersService
 
 
         /* Save Stock Transaction */
-        $stockTransaction = $this->stockTransactionsService->registerBuyTransaction(
+        $this->stockTransactionsService->registerBuyTransaction(
             $currentUser,
             $stock,
             $stockPrice,
@@ -60,6 +60,39 @@ class StocksUsersService
         return $stockUser;
     }
 
+	public function sell(Stock $stock, int $amount) {
+		/*  @var User $currentUser */
+		$currentUser = Auth::user();
+
+		$stockUser = $currentUser->stocks()->where('symbol', $stock->symbol)->firstOrFail()->pivot;
+
+		if ($stockUser->amount < $amount) {
+			throw new UnprocessableEntityException('Posee menos acciones de las que desea vender', 102);
+		}
+
+		/* Discount from User's stocks */
+		$stockUser->amount -= $amount;
+		$stockUser->save();
+
+
+		/* Add finance to User's account */
+		$stockPrice = $this->getStockPrice($stock);
+		$totalPrice = $stockPrice * $amount;
+
+		$currentUser->finance += $totalPrice;
+		$currentUser->save();
+
+
+		/* Save Stock Transaction */
+		$this->stockTransactionsService->registerSellTransaction(
+			$currentUser,
+			$stock,
+			$stockPrice,
+			$amount
+		);
+
+		return $stockUser;
+	}
 
     private function getStockPrice(Stock $stock) {
         $parameters = [
