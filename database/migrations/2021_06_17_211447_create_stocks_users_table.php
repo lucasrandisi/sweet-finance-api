@@ -14,14 +14,15 @@ class CreateStocksUsersTable extends Migration
     public function up()
     {
         Schema::create('stocks_users', function (Blueprint $table) {
+            $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('stock_id');
+            $table->string('stock_symbol');
             $table->integer('amount');
 
 
-            $table->primary(['user_id', 'stock_id']);
+            $table->unique(['user_id', 'stock_symbol']);
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('stock_id')->references('id')->on('stocks');
+            $table->foreign('stock_symbol')->references('symbol')->on('stocks');
         });
     }
 

@@ -4,20 +4,16 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateStocksTable extends Migration
+class AddFinanceColumnUsersTable extends Migration
 {
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
-    {
-        Schema::create('stocks', function (Blueprint $table) {
-            $table->string('symbol');
-            $table->string('name');
-
-            $table->primary('symbol');
+    public function up() {
+        Schema::table('users', function (Blueprint $table) {
+            $table->integer('finance');
         });
     }
 
@@ -28,6 +24,8 @@ class CreateStocksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('stocks');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('finance');
+        });
     }
 }
