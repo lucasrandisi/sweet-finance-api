@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\Http;
 
 class AlphaVantageService
 {
-    private string $apiKey;
-    private string $baseUrl = 'https://www.alphavantage.co/query';
+	const BASE_URL = 'https://www.alphavantage.co/query';
+	private string $apiKey;
 
     public function __construct() {
         $this->apiKey = AlphaVantageKey::all()->random(1)->first()->api_key;
@@ -19,6 +19,6 @@ class AlphaVantageService
     public function query(array $parameters = []) {
         $parameters['apikey'] = $this->apiKey;
 
-        return Http::get($this->baseUrl, $parameters)->json();
+        return Http::get(AlphaVantageService::BASE_URL, $parameters)->json();
     }
 }
