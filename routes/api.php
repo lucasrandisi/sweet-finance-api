@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AlphaVantageController;
 use App\Http\Controllers\StocksUsersController;
+use App\Http\Controllers\TwelveDataKeyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -32,9 +33,13 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::prefix('/stocks/{stock}')->group(function() {
         Route::post('buy', [StocksUsersController::class, 'buy']);
 		Route::post('sell', [StocksUsersController::class, 'sell']);
-
 	});
 
+
+    Route::prefix('/twelve-data')->group((function() {
+		Route::get('stocks', [TwelveDataKeyController::class, 'stocks']);
+		Route::get('price', [TwelveDataKeyController::class, 'price']);
+	}));
 
     // Alpha Vantage
     Route::get('/alpha-vantage', AlphaVantageController::class);
