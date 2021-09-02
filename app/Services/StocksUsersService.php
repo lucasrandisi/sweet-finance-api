@@ -12,14 +12,14 @@ use Illuminate\Support\Facades\Auth;
 
 class StocksUsersService
 {
-    protected AlphaVantageService $alphaVantageService;
+    protected TwelveDataService $twelveDataService;
     protected StockTransactionsService  $stockTransactionsService;
 
     public function __construct(
-        AlphaVantageService $alphaVantageService,
+        TwelveDataService $twelveDataService,
         StockTransactionsService $stockTransactionsService
     ) {
-        $this->alphaVantageService = $alphaVantageService;
+        $this->twelveDataService = $twelveDataService;
         $this->stockTransactionsService = $stockTransactionsService;
     }
 
@@ -96,10 +96,9 @@ class StocksUsersService
 
     private function getStockPrice(Stock $stock) {
         $parameters = [
-            'function' => 'GLOBAL_QUOTE',
             'symbol' => $stock->symbol
         ];
 
-        return $this->alphaVantageService->query($parameters)['Global Quote']['05. price'];
+        return $this->twelveDataService->getPrice($parameters);
     }
 }

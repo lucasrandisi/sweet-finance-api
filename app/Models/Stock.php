@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Exceptions\NotFoundException;
 use App\Services\AlphaVantageService;
+use App\Services\TwelveDataService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -26,21 +27,23 @@ class Stock extends Model
     {
         return Stock::where('symbol', $value)->firstOr(function() use ($value) {
             $parameters = [
-                'function' => 'OVERVIEW',
                 'symbol' => $value
             ];
 
-            $alphaVantageService = new AlphaVantageService();
+            $twelveDataService = new TwelveDataService();
 
-            $response = $alphaVantageService->query($parameters);
+            $response = $twelveDataService->getStocks($parameters);
 
             if (!$response) {
                 throw new NotFoundException('Symbol not found', 101);
             }
 
+            // Stocks records are repeated for each country exchange
+            $retrievedStock = $response[0];
+
             $stock = Stock::create([
-                'symbol' => $response['Symbol'],
-                'name' => $response['Name']
+                'symbol' => $retrievedStock['symbol'],
+                'name' => $retrievedStock['name']
             ]);
 
             return $stock;
