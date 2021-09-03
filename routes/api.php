@@ -38,9 +38,7 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
 
     // Twelve Data
     Route::prefix('/twelve-data')->group((function() {
-		Route::get('stocks', [TwelveDataKeyController::class, 'stocks']);
-		Route::get('price', [TwelveDataKeyController::class, 'price']);
-		Route::get('quote', [TwelveDataKeyController::class, 'quote']);
+		Route::get('{path}', TwelveDataKeyController::class);
 	}));
 
     // Alpha Vantage

@@ -23,7 +23,7 @@ class TwelveDataService
 	}
 
 	private function constructUrl(string $resourcePath) {
-		return TwelveDataService::BASE_URL . $resourcePath;
+		return TwelveDataService::BASE_URL . '/' . $resourcePath;
 	}
 
 
@@ -38,11 +38,11 @@ class TwelveDataService
 		$url = $this->constructUrl('/price');
 		$baseParameters = $this->constructBaseParameters();
 
-		return Http::get($url, array_merge($parameters, $baseParameters))->json('price');
+		return Http::get($url, array_merge($parameters, $baseParameters))->json();
 	}
 
-	public function getQuote(array $parameters = []) {
-		$url = $this->constructUrl('/quote');
+	public function getData(string $path, array $parameters = []) {
+		$url = $this->constructUrl($path);
 		$baseParameters = $this->constructBaseParameters();
 
 		return Http::get($url, array_merge($parameters, $baseParameters))->json();
