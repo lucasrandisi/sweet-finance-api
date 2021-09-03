@@ -26,21 +26,6 @@ class TwelveDataService
 		return TwelveDataService::BASE_URL . '/' . $resourcePath;
 	}
 
-
-	public function getStocks(array $parameters = []) {
-		$url = $this->constructUrl('/stocks');
-		$baseParameters = $this->constructBaseParameters();
-
-		return Http::get($url, array_merge($parameters, $baseParameters))->json('data');
-	}
-
-	public function getPrice(array $parameters = []) {
-		$url = $this->constructUrl('/price');
-		$baseParameters = $this->constructBaseParameters();
-
-		return Http::get($url, array_merge($parameters, $baseParameters))->json();
-	}
-
 	public function getData(string $path, array $parameters = []) {
 		$url = $this->constructUrl($path);
 		$baseParameters = $this->constructBaseParameters();

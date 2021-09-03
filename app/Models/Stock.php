@@ -32,14 +32,14 @@ class Stock extends Model
 
             $twelveDataService = new TwelveDataService();
 
-            $response = $twelveDataService->getStocks($parameters);
+            $response = $twelveDataService->getData('stocks', $parameters);
 
             if (!$response) {
                 throw new NotFoundException('Symbol not found', 101);
             }
+			// Stocks records are repeated for each country exchange
+			$retrievedStock = $response['data'][0];
 
-            // Stocks records are repeated for each country exchange
-            $retrievedStock = $response[0];
 
             $stock = Stock::create([
                 'symbol' => $retrievedStock['symbol'],
