@@ -40,4 +40,11 @@ class TwelveDataService
 
 		return Http::get($url, array_merge($parameters, $baseParameters))->json('price');
 	}
+
+	public function getQuote(array $parameters = []) {
+		$url = $this->constructUrl('/quote');
+		$baseParameters = $this->constructBaseParameters();
+
+		return Http::get($url, array_merge($parameters, $baseParameters))->json();
+	}
 }
