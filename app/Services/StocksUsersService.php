@@ -24,6 +24,8 @@ class StocksUsersService
     }
 
     public function buy(Stock $stock, int $amount) {
+
+
         $stockPrice = $this->getStockPrice($stock);
 
         $totalPrice = $stockPrice * $amount;
@@ -99,6 +101,8 @@ class StocksUsersService
             'symbol' => $stock->symbol
         ];
 
-        return $this->twelveDataService->getPrice($parameters);
+        $result  = $this->twelveDataService->getData('price', $parameters);
+
+        return $result['price'];
     }
 }

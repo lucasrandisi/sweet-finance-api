@@ -13,18 +13,10 @@ class TwelveDataKeyController extends Controller
 		$this->twelveDataService = $twelveDataService;
 	}
 
-	public function stocks(Request $request) {
+	public function __invoke(Request $request, string $path) {
 		$queryString = $request->query();
 
-		$result = $this->twelveDataService->getStocks($queryString);
-
-		return response()->json($result);
-	}
-
-	public function price(Request  $request) {
-		$queryString = $request->query();
-
-		$result = $this->twelveDataService->getPrice($queryString);
+		$result = $this->twelveDataService->getData($path, $queryString);
 
 		return response()->json($result);
 	}
