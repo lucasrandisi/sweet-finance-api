@@ -14,7 +14,7 @@
 5. `sudo apt-get update`
 6. `sudo apt-get install docker-ce docker-ce-cli containerd.io`
 7. `sudo groupadd docker`
-8. `sudo usermod -aG docker usuario_pc`
+8. `sudo usermod -aG docker [usuario_pc]`
 9. `newgrp docker`
 
 1. `sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose`
@@ -38,7 +38,7 @@
 4. Back to repository: `sail up -d`
 5. `sail artisan migrate:install`
 6. `sail artisan migrate`
-7. `sail artisan db:seed --class=AlphaVantageKeysSeeder`
+7. `sail artisan db:seed`
 8. `sail artisan key:generate`
 
 In case of problem with root password for mysql:
@@ -47,7 +47,7 @@ In case of problem with root password for mysql:
 
 ## Install DBeaver from Ubuntu Software and set up with
 
-Server Host: localhost
+Server Host: localhost 
 Port: 33061
 Username: sail
 Password: password
