@@ -24,8 +24,6 @@ class StocksUsersService
     }
 
     public function buy(Stock $stock, int $amount) {
-
-
         $stockPrice = $this->getStockPrice($stock);
 
         $totalPrice = $stockPrice * $amount;
@@ -66,7 +64,10 @@ class StocksUsersService
 		/*  @var User $currentUser */
 		$currentUser = Auth::user();
 
-		$stockUser = $currentUser->stocks()->where('symbol', $stock->symbol)->firstOrFail()->pivot;
+		$stockUser = StockUser::where([
+			'stock_symbol' => $stock->symbol,
+			'user_id' => $currentUser->id
+		])->firstOrFail();
 
 		if ($stockUser->amount < $amount) {
 			throw new UnprocessableEntityException('Posee menos acciones de las que desea vender', 102);

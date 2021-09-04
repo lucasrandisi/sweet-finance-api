@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AlphaVantageController;
 use App\Http\Controllers\StocksUsersController;
 use App\Http\Controllers\TwelveDataKeyController;
+use App\Http\Controllers\UsersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,9 +26,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::post('/logout', [AuthController::class, 'logout']);
 
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    });
+    Route::get('/me', [UsersController::class, 'me']);
 
     // Stocks
     Route::prefix('/stocks/{stock}')->group(function() {

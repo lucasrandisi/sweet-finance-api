@@ -21,4 +21,12 @@ class StockUser extends Model
     protected $attributes = [
         'amount' => 0
     ];
+
+    public function user() {
+    	return $this->belongsTo(User::class);
+	}
+
+	public function stock() {
+    	return $this->belongsTo(Stock::class);
+	}
 }

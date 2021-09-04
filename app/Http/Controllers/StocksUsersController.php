@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BuyStockRequest;
+use App\Http\Resources\StockUserResource;
 use App\Models\Stock;
 use App\Services\StocksUsersService;
 
@@ -19,12 +20,12 @@ class StocksUsersController extends Controller
     public function buy(Stock $stock, BuyStockRequest $request) {
         $result = $this->stocksUsersService->buy($stock, $request->amount);
 
-        return response()->json($result);
+        return new StockUserResource($result);
     }
 
     public function sell(Stock $stock, BuyStockRequest $request) {
     	$result = $this->stocksUsersService->sell($stock, $request->amount);
 
-    	return response()->json($result);
+    	return new StockUserResource($result);
 	}
 }
