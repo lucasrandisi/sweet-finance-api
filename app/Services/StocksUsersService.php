@@ -23,35 +23,32 @@ class StocksUsersService
         $this->stockTransactionsService = $stockTransactionsService;
     }
 
-    public function buy(Stock $stock, int $amount) {
-        $stockPrice = $this->getStockPrice($stock);
-
+    public function buy(User $user, Stock $stock, int $amount) {
+		$stockPrice = $this->getStockPrice($stock);
         $totalPrice = $stockPrice * $amount;
 
-        /*  @var User $currentUser */
-        $currentUser = Auth::user();
 
-        if ($currentUser->finance < $totalPrice) {
+        if ($user->finance < $totalPrice) {
             throw new UnprocessableEntityException('Finance insuficiente para realizar la operación', 100);
         }
 
-        /* Update User's Stocks */
-        $stockUser = StockUser::firstOrNew([
-            'user_id' => $currentUser->id,
+		/* Discount from User's Finance */
+		$user->finance -= $totalPrice;
+		$user->save();
+
+
+		/* Update User's Stocks */
+		$stockUser = StockUser::firstOrNew([
+            'user_id' => $user->id,
             'stock_symbol' => $stock->symbol,
         ]);
-        $stockUser->amount += $amount;
-        $stockUser->save();
+		$stockUser->amount += $amount;
+		$stockUser->save();
 
 
-        /* Discount from User's Finance */
-        $currentUser->finance -= $totalPrice;
-        $currentUser->save();
-
-
-        /* Save Stock Transaction */
+		/* Save Stock Transaction */
         $this->stockTransactionsService->registerBuyTransaction(
-            $currentUser,
+			$user,
             $stock,
             $stockPrice,
             $amount
@@ -60,13 +57,10 @@ class StocksUsersService
         return $stockUser;
     }
 
-	public function sell(Stock $stock, int $amount) {
-		/*  @var User $currentUser */
-		$currentUser = Auth::user();
-
+	public function sell(User $user, Stock $stock, int $amount) {
 		$stockUser = StockUser::where([
 			'stock_symbol' => $stock->symbol,
-			'user_id' => $currentUser->id
+			'user_id' => $user->id
 		])->firstOrFail();
 
 		if ($stockUser->amount < $amount) {
@@ -82,13 +76,14 @@ class StocksUsersService
 		$stockPrice = $this->getStockPrice($stock);
 		$totalPrice = $stockPrice * $amount;
 
-		$currentUser->finance += $totalPrice;
-		$currentUser->save();
+
+		$user->finance += $totalPrice;
+		$user->save();
 
 
 		/* Save Stock Transaction */
 		$this->stockTransactionsService->registerSellTransaction(
-			$currentUser,
+			$user,
 			$stock,
 			$stockPrice,
 			$amount

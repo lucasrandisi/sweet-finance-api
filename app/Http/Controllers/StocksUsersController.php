@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\BuyStockRequest;
 use App\Http\Resources\StockUserResource;
 use App\Models\Stock;
+use App\Models\User;
 use App\Services\StocksUsersService;
+use Illuminate\Support\Facades\Auth;
 
 class StocksUsersController extends Controller
 {
@@ -18,13 +20,19 @@ class StocksUsersController extends Controller
     }
 
     public function buy(Stock $stock, BuyStockRequest $request) {
-        $result = $this->stocksUsersService->buy($stock, $request->amount);
+		/*  @var User $currentUser */
+		$currentUser = Auth::user();
+
+        $result = $this->stocksUsersService->buy($currentUser, $stock, $request->amount);
 
         return new StockUserResource($result);
     }
 
     public function sell(Stock $stock, BuyStockRequest $request) {
-    	$result = $this->stocksUsersService->sell($stock, $request->amount);
+		/*  @var User $currentUser */
+		$currentUser = Auth::user();
+
+    	$result = $this->stocksUsersService->sell($currentUser, $stock, $request->amount);
 
     	return new StockUserResource($result);
 	}
