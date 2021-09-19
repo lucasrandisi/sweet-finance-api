@@ -1,0 +1,35 @@
+<?php
+
+namespace App\Http\Requests;
+
+use App\Models\StockTransaction;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
+class StoreStockOrder extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        return [
+			'action' => ['required', Rule::in(StockTransaction::ACTIONS)],
+			'amount' => 'required|integer|min:1',
+			'limit' => 'required|numeric',
+			'stop' => 'required|nullable|numeric'
+        ];
+    }
+}

@@ -2,13 +2,13 @@
 
 namespace App\Services;
 
+use App\DataTransferObjects\StockOrderDTO;
+use App\Exceptions\UnprocessableEntityException;
 use App\Models\Stock;
 use App\Models\StockOrder;
 use App\Models\StockTransaction;
 use App\Models\StockUser;
 use App\Models\User;
-use Carbon\Carbon;
-use Illuminate\Support\Arr;
 
 class StockOrdersService
 {
@@ -25,6 +25,56 @@ class StockOrdersService
 		$this->stocksUsersService = $stocksUsersService;
 		$this->stockTransactionsService = $stockTransactionsService;
 	}
+
+	/* Stores new order */
+	public function store(Stock $stock, User $user, StockOrderDTO $orderDTO) {
+		if ($orderDTO->action == StockTransaction::BUY) {
+			$this->discountUserFinance($user, $orderDTO);
+		}
+		else if ($orderDTO->action == StockTransaction::SELL) {
+			$this->discountUserStocks($stock, $user, $orderDTO);
+		}
+
+		/* Create Order */
+		return StockOrder::create([
+			'user_id' => $user->id,
+			'stock_symbol' => $stock->symbol,
+			'action' => $orderDTO->action,
+			'amount' => $orderDTO->amount,
+			'limit' => $orderDTO->limit,
+			'stop' => $orderDTO->stop
+		]);
+	}
+
+	/* Discounts user's finance when crating buy order */
+	private function discountUserFinance(User $user, StockOrderDTO $orderDTO) {
+		$totalPrice = $orderDTO->amount * $orderDTO->limit;
+
+		if ($user->finance < $totalPrice) {
+			throw new UnprocessableEntityException('Finance insuficiente para realizar la operación', 100);
+		}
+
+		/* Discount finance from user */
+		$user->finance -= $totalPrice;
+		$user->save();
+	}
+
+	/* Discounts user's stocks when crating sell order */
+	private function discountUserStocks(Stock $stock, User $user, StockOrderDTO $orderDTO) {
+		$stockUser = StockUser::where([
+			'stock_symbol' => $stock->symbol,
+			'user_id' => $user->id
+		])->firstOrFail();
+
+		if ($stockUser->amount < $orderDTO->amount) {
+			throw new UnprocessableEntityException('Posee menos acciones de las que desea vender', 102);
+		}
+
+		/* Discount from User's stocks */
+		$stockUser->amount -= $orderDTO->amount;
+		$stockUser->save();
+	}
+
 
 	/*
 	 * Checks order's prices against market price

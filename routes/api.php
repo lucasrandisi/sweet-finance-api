@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AlphaVantageController;
+use App\Http\Controllers\StockOrdersController;
 use App\Http\Controllers\StocksUsersController;
 use App\Http\Controllers\TwelveDataKeyController;
 use App\Http\Controllers\UsersController;
@@ -32,6 +33,10 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::prefix('/stocks/{stock}')->group(function() {
         Route::post('buy', [StocksUsersController::class, 'buy']);
 		Route::post('sell', [StocksUsersController::class, 'sell']);
+
+		Route::prefix('orders')->group(function() {
+			Route::post('', [StockOrdersController::class, 'store']);
+		});
 	});
 
 

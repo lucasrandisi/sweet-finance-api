@@ -32,7 +32,7 @@ class StocksUsersService
             throw new UnprocessableEntityException('Finance insuficiente para realizar la operación', 100);
         }
 
-		/* Discount from User's Finance */
+		/* Discount finance from user */
 		$user->finance -= $totalPrice;
 		$user->save();
 

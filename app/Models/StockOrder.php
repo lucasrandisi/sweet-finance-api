@@ -14,6 +14,15 @@ class StockOrder extends Model
 	protected $table = "stock_orders";
 	public $timestamps = false;
 
+	protected $fillable = [
+		'user_id',
+		'stock_symbol',
+		'action',
+		'amount',
+		'stop',
+		'limit'
+	];
+
 	public function stock() {
 		return $this->belongsTo(Stock::class);
 	}
