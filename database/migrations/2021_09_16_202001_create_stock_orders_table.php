@@ -21,6 +21,7 @@ class CreateStockOrdersTable extends Migration
 			$table->integer('amount');
 			$table->float('limit');
 			$table->float('stop')->nullable();
+			$table->enum('state', ['INACTIVE', 'ACTIVE', 'SOLD']);
 			$table->softDeletes();
 
 			$table->foreign('user_id')->references('id')->on('users');
