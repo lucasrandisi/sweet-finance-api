@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\AlphaVantageKey;
 use App\Models\TwelveDataKey;
 use Illuminate\Support\Facades\Http;
 
@@ -30,6 +29,6 @@ class TwelveDataService
 		$url = $this->constructUrl($path);
 		$baseParameters = $this->constructBaseParameters();
 
-		return Http::get($url, array_merge($parameters, $baseParameters))->json();
+		return Http::get($url, array_merge($parameters, $baseParameters));
 	}
 }

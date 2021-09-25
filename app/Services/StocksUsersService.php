@@ -97,8 +97,8 @@ class StocksUsersService
             'symbol' => $stock->symbol
         ];
 
-        $result  = $this->twelveDataService->getData('price', $parameters);
+        $response = $this->twelveDataService->getData('price', $parameters);
 
-        return $result['price'];
+        return $response->json('price');
     }
 }
