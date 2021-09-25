@@ -33,18 +33,14 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::prefix('/stocks/{stock}')->group(function() {
         Route::post('buy', [StocksUsersController::class, 'buy']);
 		Route::post('sell', [StocksUsersController::class, 'sell']);
-
-		Route::prefix('orders')->group(function() {
-			Route::post('', [StockOrdersController::class, 'store']);
-		});
 	});
 
 
+	Route::apiResource('orders', StockOrdersController::class)
+		->only(['index', 'store', 'destroy']);
+
     // Twelve Data
 	Route::get('/twelve-data/{path}', TwelveDataKeyController::class);
-
-    // Alpha Vantage
-    Route::get('/alpha-vantage', AlphaVantageController::class);
 });
 
 
