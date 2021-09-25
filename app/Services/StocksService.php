@@ -21,7 +21,7 @@ class StocksService
 			];
 
 			$response = $this->twelveDataService->getData('stocks', $parameters);
-			$retrievedStock = $response->json('data')[0];
+			$retrievedStock = $response->json('data');
 
 
 			if (!$retrievedStock) {

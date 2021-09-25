@@ -11,6 +11,10 @@ class StockOrder extends Model
     use HasFactory;
 	use SoftDeletes;
 
+	const INACTIVE_STATE = 'INACTIVE';
+	const ACTIVE_STATE = 'ACTIVE';
+	const SOLD_STATE = 'SOLD';
+
 	protected $table = "stock_orders";
 	public $timestamps = false;
 
@@ -20,7 +24,8 @@ class StockOrder extends Model
 		'action',
 		'amount',
 		'stop',
-		'limit'
+		'limit',
+		'state'
 	];
 
 	public function stock() {

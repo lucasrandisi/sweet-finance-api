@@ -10,6 +10,7 @@ class StockOrderDTO extends DataTransferObject
 	public int $amount;
 	public ?float $stop = null;
 	public float $limit;
+	public string $stock_symbol;
 
 	public static function fromRequest(Request $request){
 		return new self($request->all());

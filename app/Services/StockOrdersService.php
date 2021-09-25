@@ -12,41 +12,33 @@ use App\Models\User;
 
 class StockOrdersService
 {
-	private TwelveDataService $twelveDataService;
-	private StocksUsersService $stocksUsersService;
-	private StockTransactionsService $stockTransactionsService;
-
-	public function __construct(
-		TwelveDataService $twelveDataService,
-		StocksUsersService $stocksUsersService,
-		StockTransactionsService $stockTransactionsService
-	) {
-		$this->twelveDataService = $twelveDataService;
-		$this->stocksUsersService = $stocksUsersService;
-		$this->stockTransactionsService = $stockTransactionsService;
+	public function getUserOrders(User $user) {
+		return StockOrder::where('user_id', $user->id);
 	}
 
+
 	/* Stores new order */
-	public function store(Stock $stock, User $user, StockOrderDTO $orderDTO) {
+	public function store(User $user, StockOrderDTO $orderDTO) {
 		if ($orderDTO->action == StockTransaction::BUY) {
 			$this->discountUserFinance($user, $orderDTO);
 		}
 		else if ($orderDTO->action == StockTransaction::SELL) {
-			$this->discountUserStocks($stock, $user, $orderDTO);
+			$this->discountUserStocks($user, $orderDTO);
 		}
 
 		/* Create Order */
 		return StockOrder::create([
 			'user_id' => $user->id,
-			'stock_symbol' => $stock->symbol,
+			'stock_symbol' => $orderDTO->stock_symbol,
 			'action' => $orderDTO->action,
 			'amount' => $orderDTO->amount,
 			'limit' => $orderDTO->limit,
-			'stop' => $orderDTO->stop
+			'stop' => $orderDTO->stop,
+			'state' => StockOrder::INACTIVE_STATE
 		]);
 	}
 
-	/* Discounts user's finance when crating buy order */
+	/* Discounts user's finance when crating a buy order */
 	private function discountUserFinance(User $user, StockOrderDTO $orderDTO) {
 		$totalPrice = $orderDTO->amount * $orderDTO->limit;
 
@@ -59,14 +51,14 @@ class StockOrdersService
 		$user->save();
 	}
 
-	/* Discounts user's stocks when crating sell order */
-	private function discountUserStocks(Stock $stock, User $user, StockOrderDTO $orderDTO) {
+	/* Discounts user's stocks when crating a sell order */
+	private function discountUserStocks(User $user, StockOrderDTO $orderDTO) {
 		$stockUser = StockUser::where([
-			'stock_symbol' => $stock->symbol,
+			'stock_symbol' => $orderDTO->stock_symbol,
 			'user_id' => $user->id
-		])->firstOrFail();
+		])->first();
 
-		if ($stockUser->amount < $orderDTO->amount) {
+		if (!$stockUser || $stockUser->amount < $orderDTO->amount) {
 			throw new UnprocessableEntityException('Posee menos acciones de las que desea vender', 102);
 		}
 
@@ -75,117 +67,7 @@ class StockOrdersService
 		$stockUser->save();
 	}
 
-
-	/*
-	 * Checks order's prices against market price
-	 */
-	public function checkOrders() {
-		$orders = StockOrder::all();
-
-		$symbols = $orders->groupBy('stock_symbol')->keys()->toArray();
-
-		if (!$symbols) {
-			return;
-		}
-
-		/* Implode symbols array to pass them in the querystring to get the prices */
-		$parameters = ['symbol' => implode(',', $symbols)];
-
-		$prices = $this->twelveDataService->getData('price', $parameters);
-
-		/* Iterate over all orders */
-		foreach ($orders as $order) {
-			if (count($prices) == 1) {
-				$stockPrice = $prices['price'];
-			}
-			else {
-				$stockPrice = $prices[$order->stock_symbol]['price'];
-			}
-
-			if ($order->action == StockTransaction::BUY ) {
-				$this->checkBuyOrder($order, $stockPrice);
-			}
-			else if ($order->action == StockTransaction::SELL) {
-				$this->checkSellOrder($order, $stockPrice);
-			}
-		}
-	}
-
-	/*
-	 * Check buy order stop and limit against market price
-	 */
-	private function checkBuyOrder($order, $stockPrice) {
-		if ($order->limit < $stockPrice) {
-			return;
-		}
-
-		if ($order->stop == null || $order->stop >= $stockPrice) {
-			$stock = Stock::find($order->stock_symbol);
-
-			$this->executeBuyOrder($order, $stockPrice);
-
-			$order->delete();
-		}
-	}
-
-	/*
-	 * Add stocks to user and register transaction
-	 */
-	private function executeBuyOrder(StockOrder $order, float $stockPrice) {
-		/* Update User's Stocks */
-		$stockUser = StockUser::firstOrNew([
-			'user_id' => $order->user_id,
-			'stock_symbol' => $order->stock->symbol,
-		]);
-		$stockUser->amount += $order->amount;
-		$stockUser->save();
-
-
-		/* Save Stock Transaction */
-		$this->stockTransactionsService->registerBuyTransaction(
-			$order->user,
-			$order->stock,
-			$stockPrice,
-			$order->amount
-		);
-	}
-
-	/*
-	 * Check sell order stop and limit against market price
-	 */
-	private function checkSellOrder($order, $stockPrice) {
-		if ($order->limit > $stockPrice) {
-			return;
-		}
-
-		if ($order->stop == null || $order->stop <= $stockPrice) {
-			$stock = Stock::find($order->stock_symbol);
-
-			$this->stocksUsersService->sell($order->user, $stock, $order->amount, $stockPrice);
-		}
-
-		$order->delete();
-	}
-
-	/*
-	 * Remove stocks from user and register transaction
-	 */
-	private function executeSellOrder(StockOrder $order, float $stockPrice) {
-		/* Add finance to User's account */
-		$totalFinance = $stockPrice * $order->amount;
-
-		$user = $order->user;
-
-		$user->finance += $totalFinance;
-		$user->save();
-
-
-		/* Save Stock Transaction */
-		$this->stockTransactionsService->registerSellTransaction(
-			$order->user,
-			$order->stock,
-			$stockPrice,
-			$order->amount
-		);
+	public function deleteOrder(int $id) {
+		return StockOrder::destroy($id);
 	}
 }
