@@ -11,6 +11,7 @@ class StockTransaction extends Model
 
     public const BUY = 'BUY';
     public const SELL = 'SELL';
+	public const ACTIONS = [self::BUY, self::SELL];
 
     protected $table = 'stock_transactions';
 

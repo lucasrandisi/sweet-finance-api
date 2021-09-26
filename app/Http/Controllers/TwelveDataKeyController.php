@@ -16,8 +16,8 @@ class TwelveDataKeyController extends Controller
 	public function __invoke(Request $request, string $path) {
 		$queryString = $request->query();
 
-		$result = $this->twelveDataService->getData($path, $queryString);
+		$response = $this->twelveDataService->getData($path, $queryString);
 
-		return response()->json($result);
+		return response()->json($response->json());
 	}
 }

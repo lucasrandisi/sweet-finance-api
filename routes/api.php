@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AlphaVantageController;
+use App\Http\Controllers\StockOrdersController;
 use App\Http\Controllers\StocksUsersController;
 use App\Http\Controllers\TwelveDataKeyController;
 use App\Http\Controllers\UsersController;
@@ -35,11 +36,11 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
 	});
 
 
+	Route::apiResource('orders', StockOrdersController::class)
+		->only(['index', 'store', 'destroy']);
+
     // Twelve Data
 	Route::get('/twelve-data/{path}', TwelveDataKeyController::class);
-
-    // Alpha Vantage
-    Route::get('/alpha-vantage', AlphaVantageController::class);
 });
 
 

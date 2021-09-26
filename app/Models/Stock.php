@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Exceptions\NotFoundException;
-use App\Services\AlphaVantageService;
+use App\Services\StocksService;
 use App\Services\TwelveDataService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -25,28 +25,14 @@ class Stock extends Model
 
     public function resolveRouteBinding($value, $field = null)
     {
-        return Stock::where('symbol', $value)->firstOr(function() use ($value) {
-            $parameters = [
-                'symbol' => $value
-            ];
+        $stocksService = new StocksService(new TwelveDataService());
 
-            $twelveDataService = new TwelveDataService();
+		$stock = $stocksService->getOne($value);
 
-            $response = $twelveDataService->getData('stocks', $parameters);
+		if (!$stock) {
+			throw new NotFoundException('Symbol not found', 101);
+		}
 
-            if (!$response) {
-                throw new NotFoundException('Symbol not found', 101);
-            }
-			// Stocks records are repeated for each country exchange
-			$retrievedStock = $response['data'][0];
-
-
-            $stock = Stock::create([
-                'symbol' => $retrievedStock['symbol'],
-                'name' => $retrievedStock['name']
-            ]);
-
-            return $stock;
-        });
+		return $stock;
     }
 }
