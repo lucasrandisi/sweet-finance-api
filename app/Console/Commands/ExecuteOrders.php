@@ -2,8 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Models\StockOrder;
-use App\Services\StockOrdersService;
+use App\Services\ExecuteOrdersService;
 use Illuminate\Console\Command;
 
 class ExecuteOrders extends Command
@@ -23,9 +22,9 @@ class ExecuteOrders extends Command
     protected $description = "Get stock prices and execute orders if they match";
 
 
-    public function handle(StockOrdersService $stockOrdersService)
+    public function handle(ExecuteOrdersService $executeOrdersService)
     {
-		$stockOrdersService->checkOrders();
+		$executeOrdersService->checkOrders();
 
 		$this->info('Ordenes Ejecutadas');
     }
