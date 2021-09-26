@@ -13,7 +13,7 @@ class StockOrder extends Model
 
 	const INACTIVE_STATE = 'INACTIVE';
 	const ACTIVE_STATE = 'ACTIVE';
-	const SOLD_STATE = 'SOLD';
+	const COMPLETE_STATE = 'COMPLETE';
 
 	protected $table = "stock_orders";
 	public $timestamps = false;
