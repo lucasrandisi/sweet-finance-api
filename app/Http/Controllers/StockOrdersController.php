@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\DataTransferObjects\StockOrderDTO;
 use App\Http\Requests\StoreStockOrder;
-use App\Models\Stock;
-use App\Models\StockOrder;
 use App\Models\User;
 use App\Services\StockOrdersService;
 use Illuminate\Support\Facades\Auth;

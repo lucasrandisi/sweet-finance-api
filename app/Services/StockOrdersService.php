@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\DataTransferObjects\StockOrderDTO;
 use App\Exceptions\UnprocessableEntityException;
-use App\Models\Stock;
 use App\Models\StockOrder;
 use App\Models\StockTransaction;
 use App\Models\StockUser;
@@ -34,7 +33,7 @@ class StockOrdersService
 			'amount' => $orderDTO->amount,
 			'limit' => $orderDTO->limit,
 			'stop' => $orderDTO->stop,
-			'state' => StockOrder::INACTIVE_STATE
+			'state' => $orderDTO->stop ? StockOrder::INACTIVE_STATE : StockOrder::ACTIVE_STATE
 		]);
 	}
 
@@ -68,6 +67,25 @@ class StockOrdersService
 	}
 
 	public function deleteOrder(int $id) {
+		$stockOrder = StockOrder::find($id);
+
+		/* Return user's finance */
+		if ($stockOrder->action === StockTransaction::BUY) {
+			$user = $stockOrder->user;
+			$user->finance += $stockOrder->amount * $stockOrder->limit;
+			$user->save();
+		}
+		/* Return user's stocks */
+		else if ($stockOrder->action === StockTransaction::SELL) {
+			$stockUser = StockUser::where([
+				'stock_symbol' => $stockOrder->stock_symbol,
+				'user_id' => $stockOrder->user_id
+			])->first();
+
+			$stockUser->amount += $stockOrder->amount;
+			$stockUser->save();
+		}
+
 		return StockOrder::destroy($id);
 	}
 }
