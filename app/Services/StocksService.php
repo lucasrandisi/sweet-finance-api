@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Exceptions\NotFoundException;
 use App\Models\Stock;
 
 class StocksService
@@ -35,7 +34,16 @@ class StocksService
 
 			return $stock;
 		});
+	}
 
+	function getPrice(string $stock_symbol) {
+		$parameters = [
+			'symbol' => $stock_symbol
+		];
+
+		$response = $this->twelveDataService->getData('price', $parameters);
+
+		return $response->json('price');
 	}
 
 }
