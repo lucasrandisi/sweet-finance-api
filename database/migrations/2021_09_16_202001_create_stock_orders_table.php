@@ -22,6 +22,7 @@ class CreateStockOrdersTable extends Migration
 			$table->float('limit');
 			$table->float('stop')->nullable();
 			$table->enum('state', ['INACTIVE', 'ACTIVE', 'COMPLETE']);
+			$table->float('price_at_create_time');
 			$table->softDeletes();
 
 			$table->foreign('user_id')->references('id')->on('users');
