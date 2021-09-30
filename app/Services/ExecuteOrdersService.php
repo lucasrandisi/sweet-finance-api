@@ -53,11 +53,49 @@ class ExecuteOrdersService
 	}
 
 	/* Check buy order stop and limit against market price */
-	private function checkBuyOrder($order, $stockPrice) {
-		if ($stockPrice <= $order->limit) {
+	private function checkBuyOrder(StockOrder $order, float $stockPrice) {
+		/* Limit Order */
+		if ($order->stop == null && $order->limit >= $stockPrice) {
 			$this->executeBuyOrder($order, $stockPrice);
 		}
+		/* Stop less than stock price at create time */
+		else if ($order->stop <= $order->price_at_create_time) {
+			if ($order->state == StockOrder::INACTIVE_STATE && $order->stop >= $stockPrice) {
+				$order->state = StockOrder::ACTIVE_STATE;
+				$order->save();
+			}
+
+			if ($order->state == StockOrder::ACTIVE_STATE && $order->limit >= $stockPrice) {
+				$this->executeBuyOrder($order, $stockPrice);
+			}
+		}
+		/* Stop greater than stock price at create time */
+		else if ($order->stop > $order->price_at_create_time) {
+			if ($order->state == StockOrder::INACTIVE_STATE && $order->stop <= $stockPrice) {
+				$order->state = StockOrder::ACTIVE_STATE;
+				$order->save();
+			}
+
+			if ($order->state == StockOrder::ACTIVE_STATE && $order->limit >= $stockPrice) {
+				$this->executeBuyOrder($order, $stockPrice);
+			}
+		}
+		/* Stop equal to stock price at create time */
+		else if ($order->stop == $order->price_at_create_time) {
+			if ($order->state == StockOrder::INACTIVE_STATE) {
+				$order->state = StockOrder::ACTIVE_STATE;
+				$order->save();
+			}
+
+			if ($order->state == StockOrder::ACTIVE_STATE && $order->limit >= $stockPrice) {
+				$this->executeBuyOrder($order, $stockPrice);
+			}
+		}
 	}
+
+
+
+
 
 	/* Add stocks to user and register transaction */
 	private function executeBuyOrder(StockOrder $order, float $stockPrice) {
