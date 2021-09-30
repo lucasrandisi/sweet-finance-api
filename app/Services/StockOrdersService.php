@@ -11,6 +11,12 @@ use App\Models\User;
 
 class StockOrdersService
 {
+	private StocksService $stocksService;
+
+	public function __construct(StocksService $stocksService) {
+		$this->stocksService = $stocksService;
+	}
+
 	public function getUserOrders(User $user) {
 		return StockOrder::where('user_id', $user->id);
 	}
@@ -25,6 +31,8 @@ class StockOrdersService
 			$this->discountUserStocks($user, $orderDTO);
 		}
 
+		$stockPrice= $this->stocksService->getPrice($orderDTO->stock_symbol);
+
 		/* Create Order */
 		return StockOrder::create([
 			'user_id' => $user->id,
@@ -33,7 +41,8 @@ class StockOrdersService
 			'amount' => $orderDTO->amount,
 			'limit' => $orderDTO->limit,
 			'stop' => $orderDTO->stop,
-			'state' => $orderDTO->stop ? StockOrder::INACTIVE_STATE : StockOrder::ACTIVE_STATE
+			'state' => $orderDTO->stop ? StockOrder::INACTIVE_STATE : StockOrder::ACTIVE_STATE,
+			'price_at_create_time' => $stockPrice
 		]);
 	}
 
