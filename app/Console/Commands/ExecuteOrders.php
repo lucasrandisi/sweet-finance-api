@@ -24,8 +24,11 @@ class ExecuteOrders extends Command
 
     public function handle(ExecuteOrdersService $executeOrdersService)
     {
-		$executeOrdersService->checkOrders();
+		for ($i = 1; $i <= 3; $i++) {
+			$executeOrdersService->checkOrders();
 
-		$this->info('Ordenes Ejecutadas');
+			$this->info("Ordenes Ejecutadas, Scheduler: {$i}");
+			sleep(20);
+		}
     }
 }
