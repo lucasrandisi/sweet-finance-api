@@ -53,11 +53,36 @@ class ExecuteOrdersService
 	}
 
 	/* Check buy order stop and limit against market price */
-	private function checkBuyOrder($order, $stockPrice) {
-		if ($stockPrice <= $order->limit) {
+	private function checkBuyOrder(StockOrder $order, float $stockPrice) {
+		/* Limit Order */
+		if ($order->stop == null && $stockPrice <= $order->limit) {
 			$this->executeBuyOrder($order, $stockPrice);
 		}
+		/* Stop less than stock price at create time */
+		else if ($order->stop <= $order->price_at_create_time) {
+			if ($order->state == StockOrder::INACTIVE_STATE && $stockPrice <= $order->stop) {
+				$order->state = StockOrder::ACTIVE_STATE;
+				$order->save();
+			}
+
+			if ($order->state == StockOrder::ACTIVE_STATE && $stockPrice <= $order->limit) {
+				$this->executeBuyOrder($order, $stockPrice);
+			}
+		}
+		/* Stop greater than stock price at create time */
+		else if ($order->stop > $order->price_at_create_time) {
+			if ($order->state == StockOrder::INACTIVE_STATE && $stockPrice >= $order->stop) {
+				$order->state = StockOrder::ACTIVE_STATE;
+				$order->save();
+			}
+
+			if ($order->state == StockOrder::ACTIVE_STATE && $stockPrice <= $order->limit) {
+				$this->executeBuyOrder($order, $stockPrice);
+			}
+		}
 	}
+
+
 
 	/* Add stocks to user and register transaction */
 	private function executeBuyOrder(StockOrder $order, float $stockPrice) {
@@ -92,8 +117,31 @@ class ExecuteOrdersService
 
 	/* Check sell order stop and limit against market price */
 	private function checkSellOrder($order, $stockPrice) {
-		if ($stockPrice >= $order->limit) {
+		/* Limit Order */
+		if ($order->stop == null && $stockPrice >= $order->limit) {
 			$this->executeSellOrder($order, $stockPrice);
+		}
+		/* Stop less than stock price at create time */
+		else if ($order->stop <= $order->price_at_create_time) {
+			if ($order->state == StockOrder::INACTIVE_STATE && $stockPrice <= $order->stop) {
+				$order->state = StockOrder::ACTIVE_STATE;
+				$order->save();
+			}
+
+			if ($order->state == StockOrder::ACTIVE_STATE && $stockPrice >= $order->limit) {
+				$this->executeSellOrder($order, $stockPrice);
+			}
+		}
+		/* Stop greater than stock price at create time */
+		else if ($order->stop > $order->price_at_create_time) {
+			if ($order->state == StockOrder::INACTIVE_STATE && $stockPrice >= $order->stop) {
+				$order->state = StockOrder::ACTIVE_STATE;
+				$order->save();
+			}
+
+			if ($order->state == StockOrder::ACTIVE_STATE && $stockPrice >= $order->limit) {
+				$this->executeSellOrder($order, $stockPrice);
+			}
 		}
 	}
 

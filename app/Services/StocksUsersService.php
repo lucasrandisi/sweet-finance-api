@@ -14,17 +14,20 @@ class StocksUsersService
 {
     protected TwelveDataService $twelveDataService;
     protected StockTransactionsService  $stockTransactionsService;
+	protected StocksService $stocksService;
 
     public function __construct(
         TwelveDataService $twelveDataService,
-        StockTransactionsService $stockTransactionsService
+        StockTransactionsService $stockTransactionsService,
+		StocksService $stockService
     ) {
         $this->twelveDataService = $twelveDataService;
         $this->stockTransactionsService = $stockTransactionsService;
+		$this->stocksService = $stockService;
     }
 
     public function buy(User $user, Stock $stock, int $amount) {
-		$stockPrice = $this->getStockPrice($stock);
+		$stockPrice = $this->stocksService->getPrice($stock->symbol);
         $totalPrice = $stockPrice * $amount;
 
 
@@ -73,7 +76,7 @@ class StocksUsersService
 
 
 		/* Add finance to User's account */
-		$stockPrice = $this->getStockPrice($stock);
+		$stockPrice = $this->stocksService->getPrice($stock->symbol);
 		$totalPrice = $stockPrice * $amount;
 
 
@@ -91,14 +94,4 @@ class StocksUsersService
 
 		return $stockUser;
 	}
-
-    private function getStockPrice(Stock $stock) {
-        $parameters = [
-            'symbol' => $stock->symbol
-        ];
-
-        $response = $this->twelveDataService->getData('price', $parameters);
-
-        return $response->json('price');
-    }
 }

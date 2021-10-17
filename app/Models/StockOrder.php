@@ -25,7 +25,8 @@ class StockOrder extends Model
 		'amount',
 		'stop',
 		'limit',
-		'state'
+		'state',
+		'price_at_create_time'
 	];
 
 	public function stock() {
