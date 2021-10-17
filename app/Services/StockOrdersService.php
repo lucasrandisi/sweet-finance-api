@@ -31,7 +31,7 @@ class StockOrdersService
 			$this->discountUserStocks($user, $orderDTO);
 		}
 
-		$stockPrice= $this->stocksService->getPrice($orderDTO->stock_symbol);
+		$stockPrice = $this->stocksService->getPrice($orderDTO->stock_symbol);
 
 		/* Create Order */
 		return StockOrder::create([
