@@ -18,7 +18,7 @@ class StockOrdersService
 	}
 
 	public function getUserOrders(User $user) {
-		return StockOrder::where('user_id', $user->id);
+		return StockOrder::where('user_id', $user->id)->get();
 	}
 
 

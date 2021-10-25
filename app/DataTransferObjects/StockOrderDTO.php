@@ -2,17 +2,17 @@
 
 namespace App\DataTransferObjects;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreStockOrderRequest;
 
 class StockOrderDTO extends DataTransferObject
 {
 	public string $action;
 	public int $amount;
-	public ?float $stop = null;
+	public ?float $stop;
 	public float $limit;
 	public string $stock_symbol;
 
-	public static function fromRequest(Request $request){
-		return new self($request->all());
+	public static function fromRequest(StoreStockOrderRequest $request){
+		return new self($request->validated());
 	}
 }

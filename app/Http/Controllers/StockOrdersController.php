@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DataTransferObjects\StockOrderDTO;
-use App\Http\Requests\StoreStockOrder;
+use App\Http\Requests\StoreStockOrderRequest;
 use App\Models\User;
 use App\Services\StockOrdersService;
 use Illuminate\Support\Facades\Auth;
@@ -22,11 +22,13 @@ class StockOrdersController extends Controller
 		/*  @var User $currentUser */
 		$currentUser = Auth::user();
 
-        return $this->stockOrdersService->getUserOrders($currentUser);
+        $orders = $this->stockOrdersService->getUserOrders($currentUser);
+
+		return response()->json($orders);
     }
 
 
-    public function store(StoreStockOrder $request)
+    public function store(StoreStockOrderRequest $request)
     {
 		/*  @var User $currentUser */
 		$currentUser = Auth::user();
