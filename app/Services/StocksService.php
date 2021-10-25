@@ -20,12 +20,12 @@ class StocksService
 			];
 
 			$response = $this->twelveDataService->getData('stocks', $parameters);
-			$retrievedStock = $response->json('data')[0];
-
-
-			if (!$retrievedStock) {
+			if (!$response->json('data')) {
 				return null;
 			}
+
+			$retrievedStock = $response->json('data')[0];
+
 
 			$stock = Stock::create([
 				'symbol' => $retrievedStock['symbol'],

@@ -2,7 +2,7 @@
 
 namespace App\DataTransferObjects;
 
-use App\Http\Requests\StoreStockOrderRequest;
+use App\Http\Requests\CreateStockOrderRequest;
 
 class StockOrderDTO extends DataTransferObject
 {
@@ -12,7 +12,7 @@ class StockOrderDTO extends DataTransferObject
 	public float $limit;
 	public string $stock_symbol;
 
-	public static function fromRequest(StoreStockOrderRequest $request){
+	public static function fromRequest(CreateStockOrderRequest $request){
 		return new self($request->validated());
 	}
 }
