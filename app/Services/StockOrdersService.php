@@ -82,7 +82,7 @@ class StockOrdersService
 	}
 
 	public function deleteOrder(int $id) {
-		$stockOrder = StockOrder::find($id);
+		$stockOrder = StockOrder::findOrFail($id);
 
 		if ($stockOrder->state === StockOrder::COMPLETE_STATE) {
 			throw new UnprocessableEntityException('No se puede eliminar una orden completada', '200');
