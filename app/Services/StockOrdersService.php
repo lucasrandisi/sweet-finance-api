@@ -113,6 +113,6 @@ class StockOrdersService
 			$stockUser->save();
 		}
 
-		return $stockOrder::delete();
+		return $stockOrder->delete();
 	}
 }
