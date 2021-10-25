@@ -1,12 +1,11 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\AlphaVantageController;
+use App\Http\Controllers\FavoriteStocksController;
 use App\Http\Controllers\StockOrdersController;
 use App\Http\Controllers\StocksUsersController;
 use App\Http\Controllers\TwelveDataKeyController;
 use App\Http\Controllers\UsersController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,12 +29,15 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::get('/me', [UsersController::class, 'me']);
 
     Route::prefix('/stocks')->group(function() {
-		Route::get('/', [StocksUsersController::class, 'index']);
+		Route::apiResource('/favorites', FavoriteStocksController::class)
+			->only(['index', 'store', 'destroy']);
 
 		Route::prefix('/{stock}')->group(function() {
 			Route::post('buy', [StocksUsersController::class, 'buy']);
 			Route::post('sell', [StocksUsersController::class, 'sell']);
 		});
+
+		Route::get('/', [StocksUsersController::class, 'index']);
 	});
 
 
