@@ -84,6 +84,10 @@ class StockOrdersService
 	public function deleteOrder(int $id) {
 		$stockOrder = StockOrder::find($id);
 
+		if ($stockOrder->state === StockOrder::COMPLETE_STATE) {
+			throw new UnprocessableEntityException('No se puede eliminar una orden completada', '200');
+		}
+
 		/* Return user's finance */
 		if ($stockOrder->action === StockTransaction::BUY) {
 			$user = $stockOrder->user;
@@ -92,10 +96,10 @@ class StockOrdersService
 		}
 		/* Return user's stocks */
 		else if ($stockOrder->action === StockTransaction::SELL) {
-			$stockUser = StockUser::where([
+			$stockUser = StockUser::firstOrCreate([
 				'stock_symbol' => $stockOrder->stock_symbol,
 				'user_id' => $stockOrder->user_id
-			])->firstOrCreate();
+			]);
 
 			$stockUser->amount += $stockOrder->amount;
 			$stockUser->save();
