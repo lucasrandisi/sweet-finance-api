@@ -29,6 +29,11 @@ class StockOrder extends Model
 		'price_at_create_time'
 	];
 
+	protected $attributes = [
+		'stop' => null
+	];
+
+
 	public function stock() {
 		return $this->belongsTo(Stock::class);
 	}

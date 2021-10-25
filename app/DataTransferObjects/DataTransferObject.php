@@ -12,7 +12,10 @@ abstract class DataTransferObject
 
 		foreach ($class->getProperties(ReflectionProperty::IS_PUBLIC) as $reflectionProperty){
 			$property = $reflectionProperty->getName();
-			$this->{$property} = $parameters[$property];
+
+			if(array_key_exists($property, $parameters)) {
+				$this->{$property} = $parameters[$property];
+			}
 		}
 	}
 }
