@@ -72,7 +72,13 @@ class StockOrdersService
 
 		/* Discount from User's stocks */
 		$stockUser->amount -= $orderDTO->amount;
-		$stockUser->save();
+
+		if ($stockUser->amount == 0) {
+			$stockUser->delete();
+		}
+		else {
+			$stockUser->save();
+		}
 	}
 
 	public function deleteOrder(int $id) {
@@ -89,7 +95,7 @@ class StockOrdersService
 			$stockUser = StockUser::where([
 				'stock_symbol' => $stockOrder->stock_symbol,
 				'user_id' => $stockOrder->user_id
-			])->first();
+			])->firstOrCreate();
 
 			$stockUser->amount += $stockOrder->amount;
 			$stockUser->save();
