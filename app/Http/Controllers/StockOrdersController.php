@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DataTransferObjects\StockOrderDTO;
-use App\Http\Requests\StoreStockOrderRequest;
+use App\Http\Requests\CreateStockOrderRequest;
 use App\Models\User;
 use App\Services\StockOrdersService;
 use Illuminate\Support\Facades\Auth;
@@ -28,7 +28,7 @@ class StockOrdersController extends Controller
     }
 
 
-    public function store(StoreStockOrderRequest $request)
+    public function store(CreateStockOrderRequest $request)
     {
 		/*  @var User $currentUser */
 		$currentUser = Auth::user();
@@ -43,6 +43,9 @@ class StockOrdersController extends Controller
 
     public function destroy(int $id)
     {
-		return $this->stockOrdersService->deleteOrder($id);
+		/*  @var User $currentUser */
+		$currentUser = Auth::user();
+
+		return $this->stockOrdersService->deleteOrder($id, $currentUser->id);
     }
 }

@@ -8,6 +8,7 @@ use App\Models\StockOrder;
 use App\Models\StockTransaction;
 use App\Models\StockUser;
 use App\Models\User;
+use Illuminate\Validation\UnauthorizedException;
 
 class StockOrdersService
 {
@@ -81,8 +82,15 @@ class StockOrdersService
 		}
 	}
 
-	public function deleteOrder(int $id) {
-		$stockOrder = StockOrder::findOrFail($id);
+	public function deleteOrder(int $orderId, int $userId) {
+		$stockOrder = StockOrder::where([
+			'id' => $orderId,
+			'user_id' => $userId
+		])->firstOrFail();
+
+		if ($stockOrder->user_id !== $userId) {
+			throw new UnauthorizedException();
+		}
 
 		if ($stockOrder->state === StockOrder::COMPLETE_STATE) {
 			throw new UnprocessableEntityException('No se puede eliminar una orden completada', '200');
@@ -105,6 +113,6 @@ class StockOrdersService
 			$stockUser->save();
 		}
 
-		return StockOrder::destroy($id);
+		return $stockOrder->delete();
 	}
 }
