@@ -22,7 +22,9 @@ class StockOrdersController extends Controller
 		/*  @var User $currentUser */
 		$currentUser = Auth::user();
 
-        return $this->stockOrdersService->getUserOrders($currentUser);
+        $orders = $this->stockOrdersService->getUserOrders($currentUser);
+
+		return response()->json($orders);
     }
 
 
