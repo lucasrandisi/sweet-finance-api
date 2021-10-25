@@ -8,7 +8,7 @@ class StockOrderDTO extends DataTransferObject
 {
 	public string $action;
 	public int $amount;
-	public ?float $stop;
+	public ?float $stop = null;
 	public float $limit;
 	public string $stock_symbol;
 

@@ -19,6 +19,15 @@ class StocksUsersController extends Controller
         $this->stocksUsersService = $stocksUsersService;
     }
 
+	public function index() {
+		/*  @var User $currentUser */
+		$currentUser = Auth::user();
+
+		$userStocks = $this->stocksUsersService->getUserStocks($currentUser);
+
+		return response()->json($userStocks);
+	}
+
     public function buy(Stock $stock, BuyStockRequest $request) {
 		/*  @var User $currentUser */
 		$currentUser = Auth::user();

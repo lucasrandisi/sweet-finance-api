@@ -29,10 +29,13 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
 
     Route::get('/me', [UsersController::class, 'me']);
 
-    // Stocks
-    Route::prefix('/stocks/{stock}')->group(function() {
-        Route::post('buy', [StocksUsersController::class, 'buy']);
-		Route::post('sell', [StocksUsersController::class, 'sell']);
+    Route::prefix('/stocks')->group(function() {
+		Route::get('/', [StocksUsersController::class, 'index']);
+
+		Route::prefix('/{stock}')->group(function() {
+			Route::post('buy', [StocksUsersController::class, 'buy']);
+			Route::post('sell', [StocksUsersController::class, 'sell']);
+		});
 	});
 
 

@@ -72,11 +72,21 @@ class StockOrdersService
 
 		/* Discount from User's stocks */
 		$stockUser->amount -= $orderDTO->amount;
-		$stockUser->save();
+
+		if ($stockUser->amount == 0) {
+			$stockUser->delete();
+		}
+		else {
+			$stockUser->save();
+		}
 	}
 
 	public function deleteOrder(int $id) {
-		$stockOrder = StockOrder::find($id);
+		$stockOrder = StockOrder::findOrFail($id);
+
+		if ($stockOrder->state === StockOrder::COMPLETE_STATE) {
+			throw new UnprocessableEntityException('No se puede eliminar una orden completada', '200');
+		}
 
 		/* Return user's finance */
 		if ($stockOrder->action === StockTransaction::BUY) {
@@ -86,10 +96,10 @@ class StockOrdersService
 		}
 		/* Return user's stocks */
 		else if ($stockOrder->action === StockTransaction::SELL) {
-			$stockUser = StockUser::where([
+			$stockUser = StockUser::firstOrCreate([
 				'stock_symbol' => $stockOrder->stock_symbol,
 				'user_id' => $stockOrder->user_id
-			])->first();
+			]);
 
 			$stockUser->amount += $stockOrder->amount;
 			$stockUser->save();

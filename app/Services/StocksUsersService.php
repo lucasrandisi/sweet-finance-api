@@ -72,7 +72,14 @@ class StocksUsersService
 
 		/* Discount from User's stocks */
 		$stockUser->amount -= $amount;
-		$stockUser->save();
+
+		if ($stockUser->amount == 0) {
+			$stockUser->delete();
+		}
+		else {
+			$stockUser->save();
+		}
+
 
 
 		/* Add finance to User's account */
@@ -93,5 +100,11 @@ class StocksUsersService
 		);
 
 		return $stockUser;
+	}
+
+	public function getUserStocks(User $user) {
+		return StockUser::where([
+			'user_id' => $user->id
+		])->get();
 	}
 }
