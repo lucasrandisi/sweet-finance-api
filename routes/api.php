@@ -27,6 +27,7 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::get('/me', [UsersController::class, 'me']);
+	Route::patch('/me', [UsersController::class, 'update']);
 
     Route::prefix('/stocks')->group(function() {
 		Route::apiResource('/favorites', FavoriteStocksController::class)
