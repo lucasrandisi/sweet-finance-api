@@ -86,7 +86,11 @@ class StockOrdersService
 		$stockOrder = StockOrder::where([
 			'id' => $orderId,
 			'user_id' => $userId
-		])->firstOrFail();
+		])->first();
+
+		if (!$stockOrder) {
+			return false;
+		}
 
 		if ($stockOrder->user_id !== $userId) {
 			throw new UnauthorizedException();
@@ -102,6 +106,7 @@ class StockOrdersService
 			$user->finance += $stockOrder->amount * $stockOrder->limit;
 			$user->save();
 		}
+
 		/* Return user's stocks */
 		else if ($stockOrder->action === StockTransaction::SELL) {
 			$stockUser = StockUser::firstOrCreate([

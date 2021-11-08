@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\DataTransferObjects\StockOrderDTO;
 use App\Http\Requests\CreateStockOrderRequest;
 use App\Http\Resources\StockOrderResource;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Services\StockOrdersService;
 use Illuminate\Support\Facades\Auth;
@@ -47,6 +48,11 @@ class StockOrdersController extends Controller
 		/*  @var User $currentUser */
 		$currentUser = Auth::user();
 
-		$this->stockOrdersService->deleteOrder($id, $currentUser->id);
+		$result = $this->stockOrdersService->deleteOrder($id, $currentUser->id);
+
+		return response()->json([
+			'status' => $result ? 'success' : 'failed',
+			'user' => new UserResource($currentUser->refresh())
+		]);
     }
 }
