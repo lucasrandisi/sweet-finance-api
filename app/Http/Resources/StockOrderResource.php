@@ -24,6 +24,7 @@ class StockOrderResource extends JsonResource
 			'amount' => $this->amount,
 			'state' => $this->state,
 			'price_at_create_time' => $this->price_at_create_time,
+			'created_at' => $this->created_at
 		];
     }
 }

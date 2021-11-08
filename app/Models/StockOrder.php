@@ -16,7 +16,6 @@ class StockOrder extends Model
 	const COMPLETE_STATE = 'COMPLETE';
 
 	protected $table = "stock_orders";
-	public $timestamps = false;
 
 	protected $fillable = [
 		'user_id',
