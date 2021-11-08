@@ -8,3 +8,8 @@ Stocks 1XX
 Orders 2XX
 ---------------
 - 200: Cannot delete a completed order
+
+
+Favorites 3XX
+---------------
+- 300: Ticker already added to the user favorites list

@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use App\Exceptions\UnprocessableEntityException;
 use App\Models\FavoriteStock;
+use Illuminate\Database\QueryException;
 
 class FavoriteStocksService
 {
@@ -14,10 +16,15 @@ class FavoriteStocksService
 	}
 
 	public function create(int $userId, string $stockSymbol) {
-		return FavoriteStock::create([
-			'user_id' => $userId,
-			'stock_symbol' => $stockSymbol
-		]);
+		try {
+			return FavoriteStock::create([
+				'user_id' => $userId,
+				'stock_symbol' => $stockSymbol
+			]);
+		}
+		catch (QueryException $exception) {
+			throw new UnprocessableEntityException('El ticker ya se encuentra agregado a favoritos', 300);
+		}
 	}
 
 	public function delete(int $favoriteStockId, int $userId) {
