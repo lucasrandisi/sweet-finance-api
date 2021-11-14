@@ -10,8 +10,19 @@ class TwelveDataService
 	const BASE_URL = 'https://api.twelvedata.com';
 	private string $apiKey;
 
+	/* Api keys that have reached the limit amount */
+	private array $expiredApiKeys = [];
+
 	public function __construct() {
-		$this->apiKey = TwelveDataKey::all()->random(1)->first()->api_key;
+		$this->setApiKey();
+	}
+
+	public function setApiKey() {
+		$this->apiKey = TwelveDataKey::all()
+			->whereNotIn('api_key', $this->expiredApiKeys)
+			->random(1)
+			->first()
+			->api_key;
 	}
 
 	/**
@@ -29,6 +40,16 @@ class TwelveDataService
 		$url = $this->constructUrl($path);
 		$baseParameters = $this->constructBaseParameters();
 
-		return Http::get($url, array_merge($parameters, $baseParameters));
+		$response = Http::get($url, array_merge($parameters, $baseParameters));
+
+		// Retry http call with another api key
+		if ($response->ok() && $response->json('code') === 429) {
+			array_push($this->expiredApiKeys, $this->apiKey);
+			$this->setApiKey();
+
+			return $this->getData($path, $parameters);
+		}
+
+		return $response;
 	}
 }
