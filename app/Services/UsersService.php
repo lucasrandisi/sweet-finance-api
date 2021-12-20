@@ -10,10 +10,6 @@ use Illuminate\Support\Facades\Hash;
 class UsersService
 {
 	public function updateUser(User $user, UserDTO $userNewData) {
-		if ($userNewData->password) {
-			$userNewData->password = Hash::make($userNewData->password);
-		}
-
 		$user->fill((array) $userNewData);
 		$user->save();
 

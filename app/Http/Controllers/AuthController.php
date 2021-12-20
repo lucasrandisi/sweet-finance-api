@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\UnprocessableEntityException;
+use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -50,4 +53,23 @@ class AuthController extends Controller
 
         return response()->json([], 200);
     }
+
+	public function changePassword(ChangePasswordRequest $request) {
+		$newPassword = $request->new_password;
+		$oldPassword = $request->old_password;
+
+		/** @var User $currentUser */
+		$currentUser = Auth::user();
+
+		if (!Hash::check($oldPassword, $currentUser->password)) {
+			return response()->json([
+				'message' => 'Bad credentials'
+			], 401);
+		}
+
+		$currentUser->password = Hash::make($newPassword);
+		$currentUser->save();
+
+		return response(null, 200);
+	}
 }
