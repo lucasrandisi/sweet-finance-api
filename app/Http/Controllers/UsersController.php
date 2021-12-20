@@ -22,7 +22,7 @@ class UsersController extends Controller
 		return new UserResource($request->user());
 	}
 
-	public function update(UpdateMeRequest $request) {
+	public function updateMe(UpdateMeRequest $request) {
 		/*  @var User $currentUser */
 		$currentUser = Auth::user();
 

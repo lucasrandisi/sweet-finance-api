@@ -26,9 +26,13 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::post('/logout', [AuthController::class, 'logout']);
 
-    Route::get('/me', [UsersController::class, 'me']);
-	Route::patch('/me', [UsersController::class, 'update']);
 
+	// Me
+    Route::get('/me', [UsersController::class, 'me']);
+	Route::patch('/me', [UsersController::class, 'updateMe']);
+
+
+	// Stocks
     Route::prefix('/stocks')->group(function() {
 		Route::apiResource('/favorites', FavoriteStocksController::class)
 			->only(['index', 'store', 'destroy']);
@@ -42,8 +46,10 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
 	});
 
 
+	// Orders
 	Route::apiResource('orders', StockOrdersController::class)
 		->only(['index', 'store', 'destroy']);
+
 
     // Twelve Data
 	Route::get('/twelve-data/{path}', TwelveDataKeyController::class);

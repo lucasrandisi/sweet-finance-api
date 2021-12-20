@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class UpdateMeRequest extends FormRequest
 {
@@ -16,16 +19,20 @@ class UpdateMeRequest extends FormRequest
         return true;
     }
 
-    /**
+
+	/**
      * Get the validation rules that apply to the request.
      *
      * @return array
      */
     public function rules()
     {
+		/** @var User $currentUser */
+		$currentUser = Auth::user();
+
         return [
 			'name' => 'sometimes|string',
-			'email' => 'sometimes|string|unique:users|email',
+			'email' => ['sometimes', 'string', Rule::unique('users')->ignore($currentUser->id)],
 			'password' => 'sometimes|string|confirmed|min:6',
 		];
     }
