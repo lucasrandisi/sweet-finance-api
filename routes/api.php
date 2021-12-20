@@ -25,11 +25,12 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::post('/logout', [AuthController::class, 'logout']);
-
+	Route::post('/change-password', [AuthController::class, 'changePassword']);
 
 	// Me
     Route::get('/me', [UsersController::class, 'me']);
 	Route::patch('/me', [UsersController::class, 'updateMe']);
+
 
 
 	// Stocks
