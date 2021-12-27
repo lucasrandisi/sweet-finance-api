@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
 		$this->call([
 			AlphaVantageKeysSeeder::class,
 			TwelveDataKeysSeeder::class,
+			MarketauxKeysSeeder::class
 		]);
     }
 }

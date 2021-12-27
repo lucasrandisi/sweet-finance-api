@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FavoriteStocksController;
+use App\Http\Controllers\MarketauxController;
 use App\Http\Controllers\StockOrdersController;
 use App\Http\Controllers\StocksUsersController;
 use App\Http\Controllers\TwelveDataKeyController;
@@ -21,6 +22,13 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+
+
+// Twelve Data
+Route::get('/twelve-data/{path}', TwelveDataKeyController::class);
+
+// Marketaux
+Route::get('/marketaux', MarketauxController::class);
 
 
 Route::group(['middleware' => 'auth:sanctum'], function() {
@@ -50,10 +58,6 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
 	// Orders
 	Route::apiResource('orders', StockOrdersController::class)
 		->only(['index', 'store', 'destroy']);
-
-
-    // Twelve Data
-	Route::get('/twelve-data/{path}', TwelveDataKeyController::class);
 });
 
 
