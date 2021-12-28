@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\TwelveDataService;
+use App\Clients\TwelveDataClient;
 use Illuminate\Http\Request;
 
 class TwelveDataKeyController extends Controller
 {
-	private TwelveDataService $twelveDataService;
+	private TwelveDataClient $twelveDataClient;
 
-	public function __construct(TwelveDataService $twelveDataService) {
-		$this->twelveDataService = $twelveDataService;
+	public function __construct(TwelveDataClient $twelveDataClient) {
+		$this->twelveDataClient = $twelveDataClient;
 	}
 
 	public function __invoke(Request $request, string $path) {
 		$queryString = $request->query();
 
-		$response = $this->twelveDataService->getData($path, $queryString);
+		$response = $this->twelveDataClient->getData($path, $queryString);
 
 		return response()->json($response->json());
 	}

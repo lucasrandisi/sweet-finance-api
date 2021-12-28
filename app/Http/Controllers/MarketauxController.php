@@ -2,23 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Clients\MarketauxClient;
 use App\Http\Requests\MarketauxRequest;
-use App\Services\MarketauxService;
-use Illuminate\Http\Request;
 
 class MarketauxController extends Controller
 {
-	private MarketauxService $marketauxService;
+	private MarketauxClient $marketauxClient;
 
-	public function __construct(MarketauxService $marketauxService) {
-		$this->marketauxService = $marketauxService;
+	public function __construct(MarketauxClient $marketauxClient) {
+		$this->marketauxClient = $marketauxClient;
 	}
 
 	public function __invoke(MarketauxRequest $request) {
 		$path = $request->get('path');
 		$queryString = $request->except('path');
 
-		$response = $this->marketauxService->getData($path, $queryString);
+		$response = $this->marketauxClient->getData($path, $queryString);
 
 		return response()->json($response->json());
 	}

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Services;
+namespace App\Clients;
 
 use App\Models\MarketauxApiKey;
 use Illuminate\Support\Facades\Http;
 
-class MarketauxService
+class MarketauxClient
 {
 	const BASE_URL = 'https://api.marketaux.com/v1';
 	private string $apiKey;

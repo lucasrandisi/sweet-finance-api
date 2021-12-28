@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Services;
+namespace App\Clients;
 
 use App\Models\TwelveDataKey;
 use Illuminate\Support\Facades\Http;
 
-class TwelveDataService
+class TwelveDataClient
 {
 	const BASE_URL = 'https://api.twelvedata.com';
 	private string $apiKey;
@@ -33,7 +33,7 @@ class TwelveDataService
 	}
 
 	private function constructUrl(string $resourcePath) {
-		return TwelveDataService::BASE_URL . '/' . $resourcePath;
+		return TwelveDataClient::BASE_URL . '/' . $resourcePath;
 	}
 
 	public function getData(string $path, array $parameters = []) {
