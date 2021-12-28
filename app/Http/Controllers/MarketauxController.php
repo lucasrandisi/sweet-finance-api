@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Clients\MarketauxClient;
-use App\Http\Requests\MarketauxRequest;
+use App\Http\Requests\ThirdClientRequest;
 
 class MarketauxController extends Controller
 {
@@ -13,7 +13,7 @@ class MarketauxController extends Controller
 		$this->marketauxClient = $marketauxClient;
 	}
 
-	public function __invoke(MarketauxRequest $request) {
+	public function __invoke(ThirdClientRequest $request) {
 		$path = $request->get('path');
 		$queryString = $request->except('path');
 
