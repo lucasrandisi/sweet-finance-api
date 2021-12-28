@@ -43,7 +43,7 @@ class FmpClient
 		$response = Http::get($url, array_merge($parameters, $baseParameters));
 
 		// Retry http call with another api key
-		if ($response->ok() && in_array($response->json('code') , [402, 429])) {
+		if ($response->ok() && $response->json('Error Message')) {
 			array_push($this->expiredApiKeys, $this->apiKey);
 			$this->setApiKey();
 
