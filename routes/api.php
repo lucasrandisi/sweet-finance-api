@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FavoriteStocksController;
+use App\Http\Controllers\FmpController;
 use App\Http\Controllers\MarketauxController;
 use App\Http\Controllers\StockOrdersController;
 use App\Http\Controllers\StocksUsersController;
@@ -29,6 +30,9 @@ Route::get('/twelve-data/{path}', TwelveDataKeyController::class);
 
 // Marketaux
 Route::get('/marketaux', MarketauxController::class);
+
+// Fmp
+Route::get('/fmp', FmpController::class);
 
 
 Route::group(['middleware' => 'auth:sanctum'], function() {
