@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use App\Clients\TwelveDataClient;
 use App\Exceptions\NotFoundException;
 use App\Services\StocksService;
-use App\Services\TwelveDataService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -25,7 +25,7 @@ class Stock extends Model
 
     public function resolveRouteBinding($value, $field = null)
     {
-        $stocksService = new StocksService(new TwelveDataService());
+        $stocksService = new StocksService(new TwelveDataClient());
 
 		$stock = $stocksService->getOne($value);
 

@@ -2,14 +2,15 @@
 
 namespace App\Services;
 
+use App\Clients\TwelveDataClient;
 use App\Models\Stock;
 
 class StocksService
 {
-	private TwelveDataService $twelveDataService;
+	private TwelveDataClient $twelveDataClient;
 
-	public function __construct(TwelveDataService $twelveDataService) {
-		$this->twelveDataService = $twelveDataService;
+	public function __construct(TwelveDataClient $twelveDataClient) {
+		$this->twelveDataClient = $twelveDataClient;
 	}
 
 	public function getOne(string $symbol) {
@@ -19,7 +20,7 @@ class StocksService
 				'country' => 'United States'
 			];
 
-			$response = $this->twelveDataService->getData('stocks', $parameters);
+			$response = $this->twelveDataClient->getData('stocks', $parameters);
 			if (!$response->json('data')) {
 				return null;
 			}
@@ -41,7 +42,7 @@ class StocksService
 			'symbol' => $stock_symbol
 		];
 
-		$response = $this->twelveDataService->getData('price', $parameters);
+		$response = $this->twelveDataClient->getData('price', $parameters);
 
 		return $response->json('price');
 	}

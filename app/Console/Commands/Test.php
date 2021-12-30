@@ -2,8 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Services\StocksService;
-use App\Services\TwelveDataService;
+use App\Clients\TwelveDataClient;
 use Illuminate\Console\Command;
 
 class Test extends Command
@@ -35,12 +34,12 @@ class Test extends Command
     /**
      * Execute the console command.
      *
-     * @return int
+     * @return void
      */
-    public function handle(TwelveDataService $twelveDataService)
+    public function handle(TwelveDataClient $twelveDataClient)
     {
         for ($i=0; $i<=10; $i++) {
-			$response = $twelveDataService->getData('price', ['symbol' => 'IBM']);
+			$response = $twelveDataClient->getData('price', ['symbol' => 'IBM']);
 			$this->info($response);
 		}
     }

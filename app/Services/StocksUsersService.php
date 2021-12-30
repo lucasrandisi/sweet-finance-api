@@ -8,20 +8,16 @@ use App\Exceptions\UnprocessableEntityException;
 use App\Models\Stock;
 use App\Models\StockUser;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 
 class StocksUsersService
 {
-    protected TwelveDataService $twelveDataService;
     protected StockTransactionsService  $stockTransactionsService;
 	protected StocksService $stocksService;
 
     public function __construct(
-        TwelveDataService $twelveDataService,
         StockTransactionsService $stockTransactionsService,
 		StocksService $stockService
     ) {
-        $this->twelveDataService = $twelveDataService;
         $this->stockTransactionsService = $stockTransactionsService;
 		$this->stocksService = $stockService;
     }
