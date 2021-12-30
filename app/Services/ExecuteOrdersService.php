@@ -2,21 +2,21 @@
 
 namespace App\Services;
 
-use App\Models\Stock;
+use App\Clients\TwelveDataClient;
 use App\Models\StockOrder;
 use App\Models\StockTransaction;
 use App\Models\StockUser;
 
 class ExecuteOrdersService
 {
-	private TwelveDataService $twelveDataService;
+	private TwelveDataClient $twelveDataClient;
 	private StockTransactionsService $stockTransactionsService;
 
 	public function __construct(
-		TwelveDataService $twelveDataService,
+		TwelveDataClient $twelveDataClient,
 		StockTransactionsService $stockTransactionsService
 	) {
-		$this->twelveDataService = $twelveDataService;
+		$this->twelveDataClient = $twelveDataClient;
 		$this->stockTransactionsService = $stockTransactionsService;
 	}
 
@@ -33,7 +33,7 @@ class ExecuteOrdersService
 		/* Implode symbols array to pass them in the querystring to get the prices */
 		$parameters = ['symbol' => implode(',', $symbols)];
 
-		$prices = $this->twelveDataService->getData('price', $parameters)->json();
+		$prices = $this->twelveDataClient->getData('price', $parameters)->json();
 
 
 		/* Iterate over all orders */

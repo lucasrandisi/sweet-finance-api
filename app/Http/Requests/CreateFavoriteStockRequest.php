@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Clients\TwelveDataClient;
 use App\Rules\ExistingStockRule;
 use App\Services\StocksService;
-use App\Services\TwelveDataService;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateFavoriteStockRequest extends FormRequest
@@ -26,7 +26,7 @@ class CreateFavoriteStockRequest extends FormRequest
      */
     public function rules()
     {
-		$stockService = new StocksService(new TwelveDataService());
+		$stockService = new StocksService(new TwelveDataClient());
 		$existingStockRule = new ExistingStockRule($stockService);
 
         return [
