@@ -14,6 +14,7 @@ class AlphaVantageKeysSeeder extends Seeder
      */
     public function run()
     {
+		/*
 		Db::table('alpha_vantage_keys')->truncate();
 
 		DB::table('alpha_vantage_keys')->insert([
@@ -38,5 +39,6 @@ class AlphaVantageKeysSeeder extends Seeder
 			['api_key' => '7M2K8BDMCDP1CYXG'],
 			['api_key' => '2QAO6YRCNVZQYKNH'],
 		]);
+		*/
 	}
 }
