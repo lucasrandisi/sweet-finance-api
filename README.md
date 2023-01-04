@@ -1,16 +1,17 @@
-## Install and set up project
+## Install and Set up project
 
 1. Install [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/)
-2. Install [Composer](https://getcomposer.org/)
-3. Set up Composer in the repository of the project
+2. Pull the docker image `docker pull composer`
+3. Run 
+4. `docker run --rm --interactive --tty 
+   --volume $PWD:/app 
+   composer install`
 
-## Run
-1. Run sail
-2. Run key, migrations and seeds
+
 
 ## Front-end
 
-Link to Angular repository: [https://github.com/lucasrandisi/sweet-finance-api](https://github.com/lucasrandisi/sweet-finance-spa)
+Link to Angular repository: [https://github.com/lucasrandisi/sweet-finance-spa](https://github.com/lucasrandisi/sweet-finance-spa)
 
 
 
