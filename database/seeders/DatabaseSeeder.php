@@ -14,7 +14,6 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
 		$this->call([
-			AlphaVantageKeysSeeder::class,
 			TwelveDataKeysSeeder::class,
 			MarketauxKeysSeeder::class,
 			FmpApiKeysSeeder::class
