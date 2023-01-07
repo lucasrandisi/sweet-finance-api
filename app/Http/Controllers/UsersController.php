@@ -30,4 +30,17 @@ class UsersController extends Controller
 
 		return $this->usersService->updateUser($currentUser, $userDto);
 	}
+
+    public function addFinance(Request $request) {
+        $request->validate([
+            'amount' => 'required|integer|min:1'
+        ]);
+
+        $amount = $request->amount;
+        $user = Auth::user();
+
+        $user = $this->usersService->addFinance($user, $amount);
+
+        return new UserResource($user);
+    }
 }

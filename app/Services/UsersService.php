@@ -15,4 +15,11 @@ class UsersService
 
 		return $user;
 	}
+
+    public function addFinance(User $user, int $amount) {
+        $user->finance += $amount;
+        $user->save();
+
+        return $user;
+    }
 }

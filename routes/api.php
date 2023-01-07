@@ -42,7 +42,7 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
 	// Me
     Route::get('/me', [UsersController::class, 'me']);
 	Route::patch('/me', [UsersController::class, 'updateMe']);
-
+    Route::post('/finance', [UsersController::class, 'addFinance']);
 
 
 	// Stocks
