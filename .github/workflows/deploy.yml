@@ -17,8 +17,8 @@ jobs:
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.7.0
         with:
-          ssh-private-key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}
+          ssh-private-key: ${{secrets.DIGITALOCEAN_SSH_PRIVATE_KEY}}
         
       - name: Copy code
         run: |
-          rsync -avh --delete . $DIGITALOCEAN_USERNAME@$DIGITALOCEAN_IP:$DIGITALOCEAN_DEPLOY_PATH
+          rsync -avh --delete . ${{secrets.DIGITALOCEAN_USERNAME}}@${{DIGITALOCEAN_IP}}:${{DIGITALOCEAN_DEPLOY_PATH}}
