@@ -21,4 +21,4 @@ jobs:
         
       - name: Copy code
         run: |
-          rsync -avh --delete . ${{ secrets.DIGITALOCEAN_USERNAME}}@${{ secrets.DIGITALOCEAN_IP }}:${{ secrets.DIGITALOCEAN_DEPLOY_PATH }}
+          rsync -avh --delete -o StrictHostKeyChecking=no . ${{ secrets.DIGITALOCEAN_USERNAME}}@${{ secrets.DIGITALOCEAN_IP }}:${{ secrets.DIGITALOCEAN_DEPLOY_PATH }}
