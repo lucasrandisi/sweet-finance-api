@@ -21,7 +21,7 @@ jobs:
         
       - name: Add known hosts
         run: |
-          ${{ secrets.HOST_KEY }} >  ~/.ssh/known_hosts
+          echo ${{ secrets.HOST_KEY }} >  ~/.ssh/known_hosts
           
         
       - name: Copy code
