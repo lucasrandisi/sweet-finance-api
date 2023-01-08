@@ -19,12 +19,7 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}
         
-      - name: Add known hosts
-        run: |
-          echo ${{ secrets.HOST_KEY }} >  ~/.ssh/known_hosts
-          
-        
       - name: Copy code
         run: |
-          rsync -avh --delete -o StrictHostKeyChecking=no . \
+          rsync -avh --delete . \
             ${{ secrets.DIGITALOCEAN_USERNAME}}@${{ secrets.DIGITALOCEAN_IP }}:${{ secrets.DIGITALOCEAN_DEPLOY_PATH }}
