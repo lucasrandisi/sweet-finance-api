@@ -1,4 +1,4 @@
-name: Deploy to DigitalOcean
+name: "Deploy to DigitalOcean"
 
 on: 
   push:
@@ -11,11 +11,9 @@ jobs:
     environment: production
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
       
-      - name: Set up SSH key
-        uses: webfactory/ssh-agent@v0.3.0
+      - uses: webfactory/ssh-agent@v0.3.0
         with:
           ssh-private-key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}
           
