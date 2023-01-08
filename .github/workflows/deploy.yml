@@ -19,11 +19,6 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}
         
-      - name: Add remote to known hosts
-        run: |
-          ssh-keyscan ${{ secrets.DIGITALOCEAN_IP }} >> ~/.ssh/known_hosts
-
-        
       - name: Copy code
         run: |
           rsync -avh --delete . ${{ secrets.DIGITALOCEAN_USERNAME}}@${{ secrets.DIGITALOCEAN_IP }}:${{ secrets.DIGITALOCEAN_DEPLOY_PATH }}
