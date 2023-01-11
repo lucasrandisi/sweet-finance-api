@@ -11,14 +11,19 @@ jobs:
     environment: production
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - name: Checkout directory
+        uses: actions/checkout@v3.3.0
       
-      - name: Set up SSH key
-      - uses: webfactory/ssh-agent@v0.3.0
+      - name: Set Up SSH private key
+      - uses: webfactory/ssh-agent@v0.7.0
         with:
           ssh-private-key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}
-          
-      - name: Deploy to DigitalOcean
+
+      - name: Add to site to known hosts
         run: |
-          rsync -avh --delete . $DIGITALOCEAN_USERNAME@$DIGITALOCEAN_IP:$DIGITALOCEAN_DEPLOY_PATH
+          ssh-keyscan -H ${{secrets.DIGITALOCEAN_IP}} >> ~/.ssh/known_hosts
+
+      - name: Copy code
+        run: |
+          rsync -avh --delete . \
+            ${{ secrets.DIGITALOCEAN_USERNAME}}@${{ secrets.DIGITALOCEAN_IP }}:${{ secrets.DIGITALOCEAN_DEPLOY_PATH }}
