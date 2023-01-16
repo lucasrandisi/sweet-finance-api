@@ -22,11 +22,13 @@ jobs:
       - name: Add to site to known hosts
         run: |
           ssh-keyscan -H ${{secrets.DIGITALOCEAN_IP}} >> ~/.ssh/known_hosts
+          
        
       - name: Git pull and Install new dependencies
         run: |
+          DIGITALOCEAN_DEPLOY_PATH=${{secrets.DIGITALOCEAN_DEPLOY_PATH}} &&
           ssh -t ${{secrets.DIGITALOCEAN_USERNAME}}@${{secrets.DIGITALOCEAN_IP}} "
-            cd ${{secrets.DIGITALOCEAN_DEPLOY_PATH}} \
+            cd $DIGITALOCEAN_DEPLOY_PATH \
             && git pull \
             && docker run --rm --interactive --tty  --volume $PWD:/app  composer install
           "
