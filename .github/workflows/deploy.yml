@@ -26,9 +26,7 @@ jobs:
        
       - name: Git pull and Install new dependencies
         run: |
-          DIGITALOCEAN_DEPLOY_PATH=${{secrets.DIGITALOCEAN_DEPLOY_PATH}} &&
-          ssh ${{secrets.DIGITALOCEAN_USERNAME}}@${{secrets.DIGITALOCEAN_IP}} "
-            cd $DIGITALOCEAN_DEPLOY_PATH \
-            && git pull \
+          ssh ${{secrets.DIGITALOCEAN_USERNAME}}@${{secrets.DIGITALOCEAN_IP}}
+            cd $DIGITALOCEAN_DEPLOY_PATH
+            && git pull
             && docker run --rm --interactive --tty  --volume $PWD:/app  composer install
-          "
