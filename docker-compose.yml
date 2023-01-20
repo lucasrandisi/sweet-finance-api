@@ -40,7 +40,3 @@ networks:
 volumes:
     sailmysql:
         driver: local
-    sailredis:
-        driver: local
-    sailmeilisearch:
-        driver: local
