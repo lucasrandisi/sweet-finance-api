@@ -5,6 +5,7 @@ use App\Http\Controllers\FavoriteStocksController;
 use App\Http\Controllers\FmpController;
 use App\Http\Controllers\MarketauxController;
 use App\Http\Controllers\StockOrdersController;
+use App\Http\Controllers\StocksController;
 use App\Http\Controllers\StocksUsersController;
 use App\Http\Controllers\TwelveDataKeyController;
 use App\Http\Controllers\UsersController;
@@ -44,18 +45,17 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
 	Route::patch('/me', [UsersController::class, 'updateMe']);
     Route::post('/finance', [UsersController::class, 'addFinance']);
 
-
 	// Stocks
     Route::prefix('/stocks')->group(function() {
 		Route::apiResource('/favorites', FavoriteStocksController::class)
 			->only(['index', 'store', 'destroy']);
 
-		Route::prefix('/{stock}')->group(function() {
+		Route::get('/', [StocksController::class, 'index']);
+
+        Route::prefix('/{stock}')->group(function() {
 			Route::post('buy', [StocksUsersController::class, 'buy']);
 			Route::post('sell', [StocksUsersController::class, 'sell']);
 		});
-
-		Route::get('/', [StocksUsersController::class, 'index']);
 	});
 
 
