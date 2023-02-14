@@ -13,6 +13,21 @@ class StocksService
 		$this->twelveDataClient = $twelveDataClient;
 	}
 
+    public function getAll($limit, $filters) {
+        $query = Stock::query();
+
+        foreach ($filters as $key => $value) {
+            if ($key === 'search') {
+                $query->where('symbol', 'LIKE', "%$value%")
+                    ->orWhere('name', 'LIKE', "%$value%");
+            }
+        }
+
+        $query->limit($limit);
+
+        return $query->get();
+    }
+
 	public function getOne(string $symbol) {
 		return Stock::where('symbol', $symbol)->firstOr(function() use ($symbol) {
 			$parameters = [
