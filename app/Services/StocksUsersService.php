@@ -60,9 +60,9 @@ class StocksUsersService
 		$stockUser = StockUser::where([
 			'stock_symbol' => $stock->symbol,
 			'user_id' => $user->id
-		])->firstOrFail();
+		])->first();
 
-		if ($stockUser->amount < $amount) {
+		if (!$stockUser || $stockUser->amount < $amount) {
 			throw new UnprocessableEntityException('Posee menos acciones de las que desea vender', 102);
 		}
 
