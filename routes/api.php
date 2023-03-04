@@ -58,6 +58,8 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
 		});
 	});
 
+    Route::get('/user-stocks', [StocksUsersController::class, 'index']);
+
 
 	// Orders
 	Route::apiResource('orders', StockOrdersController::class)
