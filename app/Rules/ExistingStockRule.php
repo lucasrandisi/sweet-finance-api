@@ -4,6 +4,7 @@ namespace App\Rules;
 
 use App\Services\StocksService;
 use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Support\Facades\App;
 
 class ExistingStockRule implements Rule
 {
@@ -33,6 +34,10 @@ class ExistingStockRule implements Rule
      */
     public function message()
     {
-        return 'Symbol not found';
+        if (App::isLocale('es')) {
+            return 'No se encontró el símbolo';
+        } else {
+            return 'Symbol not found';
+        }
     }
 }
