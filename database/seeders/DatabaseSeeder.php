@@ -14,10 +14,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call([
-            TwelveDataKeysSeeder::class,
-            MarketauxKeysSeeder::class,
-            FmpApiKeysSeeder::class
-        ]);
+        $this->call([]);
     }
 }
